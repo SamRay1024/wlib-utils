@@ -21,7 +21,7 @@ function isArrayKey(array|ArrayAccess $aArray, int|string $mKey): bool;
 // Accéder à une valeur dans un tableau ou retourner une valeur par défaut
 function arrayValue(array|ArrayAccess &$aArray, int|string $mKey, mixed $mDefault = null): mixed;
 
-// Etentre un tableau à la façon jQuery.extend()
+// Etendre un tableau à la façon jQuery.extend()
 function arrayExtend(array &$aTarget, array ...$aArrays): void;
 ```
 
@@ -37,7 +37,7 @@ function unaccess(array &$aCursor, string|int ...$mKey): void;
 Ils permettent notamment d'économiser les contrôles incessants sur l'existence des clés avant d'y accéder :
 
 ```php
-// Accéder basique
+// Accès basique
 access($array, 'keyname');
 access($array, 'keyname', 'default value if keyname is not set');
 
