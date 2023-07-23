@@ -1,0 +1,33 @@
+{
+    "name": "wlib/utils",
+    "description": "Helpers functions for arrays, strings, files, debugging, ...",
+    "type": "library",
+    "keywords": ["wlib", "utils", "helpers", "debug", "array", "strings", "files"],
+    "license": "CECILL-2.1",
+    "authors": [
+        {
+            "name": "Cédric Ducarre",
+            "email": "samray1024@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0"
+    },
+    "require-dev": {
+        "pestphp/pest": "^2.8"
+    },
+    "autoload": {
+        "files": [
+            "src/arrays.php",
+            "src/debug.php",
+            "src/files.php",
+            "src/strings.php"
+        ]
+    },
+    "minimum-stability": "stable",
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
