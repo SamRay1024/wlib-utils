@@ -1,9 +1,9 @@
 <?php
 
-test('ckdir', function()
+test('createDir', function()
 {
-	expect(ckdir(__DIR__.'/ckdir'))->toBeTrue();
-	expect(__DIR__.'/ckdir')->toBeReadableDirectory();
-	expect(ckdir(__DIR__.'/ckdir'))->toBeTrue();
-	rmdir(__DIR__ . '/ckdir');
+	expect(createDir(__DIR__.'/testdir'))->toBeTrue();
+	expect(__DIR__. '/testdir')->toBeReadableDirectory();
+	expect(createDir(__DIR__.'/testdir'))->toBeTrue();
+	rmdir(__DIR__ . '/testdir');
 });
