@@ -183,7 +183,7 @@ function fileGetContent(string $sFilePath): string|false
  * @param string $sFilePath File full path.
  * @return integer|false UNIX timestamp or `false`.
  */
-function fileGetBirthTime(string $sFilePath): string|false
+function fileGetBirthTime(string $sFilePath): int|false
 {
 	if (strtolower(substr(PHP_OS, 0, 3)) === 'win')
 		return filectime($sFilePath);
@@ -210,9 +210,9 @@ function fileGetBirthTime(string $sFilePath): string|false
  * @param string $sFilePath File full path.
  * @param string $sContent Content to write.
  * @param integer $iCreateDirMode Right access for the parent directories creation.
- * @return boolean
+ * @return int|false Number of bytes written or false.
  */
-function filePutContent(string $sFilePath, string $sContent, $iCreateDirMode = 0644): bool
+function filePutContent(string $sFilePath, string $sContent, $iCreateDirMode = 0644): int|false
 {
 	$sDirPath = dirname($sFilePath);
 

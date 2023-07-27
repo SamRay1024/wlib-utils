@@ -1,3 +1,1 @@
-<?php
-
-// Config file which does not return an array
+<?php // Config file which does not return an array
