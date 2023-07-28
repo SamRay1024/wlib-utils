@@ -40,7 +40,7 @@
  * @param mixed ...$var
  * @return void
  */
-function wd(...$var)
+function vd(...$var)
 {
 	if (ob_get_length() !== false)
 		ob_end_clean();
@@ -87,7 +87,7 @@ function wd(...$var)
  * @param mixed ...$var
  * @return void
  */
-function wdd(...$var)
+function vdd(...$var)
 {
 	wd(...$var);
 	exit();

@@ -5,7 +5,11 @@ Fonctions PHP utilitaires.
 ## Installation
 
 ```shell
-composer require wlib/utils
+// For production use
+composer require --no-dev wlib/utils
+
+// For developpement use
+composer require --dev wlib/utils
 ```
 
 ## Sucreries disponibles
