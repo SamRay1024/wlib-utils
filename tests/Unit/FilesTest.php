@@ -48,3 +48,23 @@ test('removeDir', function()
 
 	expect(is_dir(__DIR__ .'/testdir'))->toBeFalse();
 });
+
+test('walkDir', function()
+{
+	$files = [];
+	$closure = function (&$item, $skip_hidden_files) use (&$files)
+	{
+		if ($skip_hidden_files && basename($item)[0] == '.')
+			return;
+
+		$files[] = str_replace(__DIR__ . '/', '', (string) $item);
+	};
+
+	walkDir(__DIR__, $closure, ['skip_hidden_files' => true], true);
+
+	sort($files);
+	
+	expect($files)->toMatchArray([
+		'ArraysTest.php', 'FilesTest.php', 'config/a.php', 'config/b.php'
+	]);
+});
