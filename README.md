@@ -5,10 +5,10 @@ Fonctions PHP utilitaires.
 ## Installation
 
 ```shell
-// For production use
+// Utilisation en production
 composer require --no-dev wlib/utils
 
-// For developpement use
+// Utilisation en développement
 composer require --dev wlib/utils
 ```
 
