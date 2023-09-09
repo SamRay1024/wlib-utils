@@ -316,3 +316,229 @@ function removeAccents($sString)
 
 	return $sString;
 }
+
+/**
+ * Make a random password with the given length.
+ * 
+ * @param int $iLen Desired password length.
+ * @return string
+ */
+function makePassword(int $iLen): string
+{
+	$sChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_[]{}<>~`+=,.;:/?|';
+	$iCharsLen = strlen($sChars) - 1;
+	$sPwd = '';
+
+	for ($i = 0; $i < $iLen; $i++)
+		$sPwd .= $sChars[random_int(0, $iCharsLen)];
+
+	return $sPwd;
+}
+
+/**
+ * Make a random private key for the given cipher method.
+ * 
+ * @see openssl_get_cipher_methods() to get available methods.
+ * @param string $sCipher Cipher method or keep empty for default (AES-256-CTR).
+ * @return string
+ */
+function makePrivateKey(string $sCipher = 'aes-256-ctr'): string
+{
+	$iLen = openssl_cipher_key_length($sCipher);
+	return makePassword(openssl_cipher_key_length($sCipher));
+}
+
+/**
+ * Encrypt a string.
+ * 
+ * Result is the Base64 encoding of the next sequence :
+ * 
+ * "IV" + Control hash + Encrypted data
+ * 
+ * - IV length depends on `$sCipher` used (use `openssl_cipher_iv_length()`),
+ * - Control hash length is 32.
+ * 
+ * @param string $sData String to encrypt.
+ * @param string $sPrivateKey Private key needed to encrypt.
+ * @param string $sCipher Cipher method with which encrypt.
+ * @return string Encrypted string, Base64 encoded.
+ * @throws LengthException in case of error with retreiving IV length.
+ */
+function encrypt(string $sData, string $sPrivateKey, string $sCipher = 'aes-256-ctr'): string
+{
+	$iIvLen = openssl_cipher_iv_length($sCipher);
+
+	if ($iIvLen === false)
+		throw new LengthException('Unable to retreive cipher IV length');
+
+	$sIV = openssl_random_pseudo_bytes($iIvLen);
+	$sEncryptedData = openssl_encrypt($sData, $sCipher, $sPrivateKey, OPENSSL_RAW_DATA, $sIV);
+	$sEncryptedHash = hash_hmac('sha3-256', $sEncryptedData, $sPrivateKey, true /* binary */);
+	return base64_encode($sIV . $sEncryptedHash . $sEncryptedData);
+}
+
+/**
+ * Decrypt a string encrypted with `encrypt()`.
+ * 
+ * @param string $sData Encrypted data.
+ * @param string $sPrivateKey Same private key used to encrypt.
+ * @param string $sCipher Same cipher method used to encrypt.
+ * @return string Decrypted string.
+ * @throws LengthException in case of error with retreiving IV length.
+ * @throws UnexpectedValueException if hash control mismatch.
+ */
+function decrypt(string $sData, string $sPrivateKey, string $sCipher = 'aes-256-ctr'): string
+{
+	$sRawData = base64_decode($sData);
+
+	$iIvLen = openssl_cipher_iv_length($sCipher);
+
+	if ($iIvLen === false)
+		throw new LengthException('Unable to retreive cipher IV length');
+
+	$sIV = substr($sRawData, 0, $iIvLen);
+	$sEncryptedHash = substr($sRawData, $iIvLen, $iHashLen = 32);
+	$sEncryptedData = substr($sRawData, $iIvLen + $iHashLen);
+
+	$sPayload = openssl_decrypt($sEncryptedData, $sCipher, $sPrivateKey, OPENSSL_RAW_DATA, $sIV);
+	$sControlHash = hash_hmac('sha3-256', $sEncryptedData, $sPrivateKey, true /* binary */);
+	
+	if (hash_equals($sEncryptedHash, $sControlHash))
+	{
+		return $sPayload;
+	}
+
+	throw new UnexpectedValueException('Hash control mismatch');
+}
+
+if (!function_exists('openssl_cipher_key_length')) :
+
+	/**
+	 * Polyfill to openssl_cipher_key_length() function for PHP < 8.2.0.
+	 * 
+	 * @see PHP documentation.
+	 */
+	function openssl_cipher_key_length(string $cipher_algo): int|false
+	{
+		$length = match (strtolower($cipher_algo))
+		{
+			'aes-128-cbc' => 16,
+			'aes-128-cbc-hmac-sha1' => 16,
+			'aes-128-cbc-hmac-sha256' => 16,
+			'aes-128-ccm' => 16,
+			'aes-128-cfb' => 16,
+			'aes-128-cfb1' => 16,
+			'aes-128-cfb8' => 16,
+			'aes-128-ctr' => 16,
+			'aes-128-ecb' => 16,
+			'aes-128-gcm' => 16,
+			'aes-128-ocb' => 16,
+			'aes-128-ofb' => 16,
+			'aes-128-wrap' => 16,
+			'aes-128-wrap-pad' => 16,
+			'aes-128-xts' => 32,
+			'aes-192-cbc' => 24,
+			'aes-192-ccm' => 24,
+			'aes-192-cfb' => 24,
+			'aes-192-cfb1' => 24,
+			'aes-192-cfb8' => 24,
+			'aes-192-ctr' => 24,
+			'aes-192-ecb' => 24,
+			'aes-192-gcm' => 24,
+			'aes-192-ocb' => 24,
+			'aes-192-ofb' => 24,
+			'aes-192-wrap' => 24,
+			'aes-192-wrap-pad' => 24,
+			'aes-256-cbc' => 32,
+			'aes-256-cbc-hmac-sha1' => 32,
+			'aes-256-cbc-hmac-sha256' => 32,
+			'aes-256-ccm' => 32,
+			'aes-256-cfb' => 32,
+			'aes-256-cfb1' => 32,
+			'aes-256-cfb8' => 32,
+			'aes-256-ctr' => 32,
+			'aes-256-ecb' => 32,
+			'aes-256-gcm' => 32,
+			'aes-256-ocb' => 32,
+			'aes-256-ofb' => 32,
+			'aes-256-wrap' => 32,
+			'aes-256-wrap-pad' => 32,
+			'aes-256-xts' => 64,
+			'aria-128-cbc' => 16,
+			'aria-128-ccm' => 16,
+			'aria-128-cfb' => 16,
+			'aria-128-cfb1' => 16,
+			'aria-128-cfb8' => 16,
+			'aria-128-ctr' => 16,
+			'aria-128-ecb' => 16,
+			'aria-128-gcm' => 16,
+			'aria-128-ofb' => 16,
+			'aria-192-cbc' => 24,
+			'aria-192-ccm' => 24,
+			'aria-192-cfb' => 24,
+			'aria-192-cfb1' => 24,
+			'aria-192-cfb8' => 24,
+			'aria-192-ctr' => 24,
+			'aria-192-ecb' => 24,
+			'aria-192-gcm' => 24,
+			'aria-192-ofb' => 24,
+			'aria-256-cbc' => 32,
+			'aria-256-ccm' => 32,
+			'aria-256-cfb' => 32,
+			'aria-256-cfb1' => 32,
+			'aria-256-cfb8' => 32,
+			'aria-256-ctr' => 32,
+			'aria-256-ecb' => 32,
+			'aria-256-gcm' => 32,
+			'aria-256-ofb' => 32,
+			'camellia-128-cbc' => 16,
+			'camellia-128-cfb' => 16,
+			'camellia-128-cfb1' => 16,
+			'camellia-128-cfb8' => 16,
+			'camellia-128-ctr' => 16,
+			'camellia-128-ecb' => 16,
+			'camellia-128-ofb' => 16,
+			'camellia-192-cbc' => 24,
+			'camellia-192-cfb' => 24,
+			'camellia-192-cfb1' => 24,
+			'camellia-192-cfb8' => 24,
+			'camellia-192-ctr' => 24,
+			'camellia-192-ecb' => 24,
+			'camellia-192-ofb' => 24,
+			'camellia-256-cbc' => 32,
+			'camellia-256-cfb' => 32,
+			'camellia-256-cfb1' => 32,
+			'camellia-256-cfb8' => 32,
+			'camellia-256-ctr' => 32,
+			'camellia-256-ecb' => 32,
+			'camellia-256-ofb' => 32,
+			'chacha20' => 32,
+			'chacha20-poly1305' => 32,
+			'des-ede-cbc' => 16,
+			'des-ede-cfb' => 16,
+			'des-ede-ecb' => 16,
+			'des-ede-ofb' => 16,
+			'des-ede3-cbc' => 24,
+			'des-ede3-cfb' => 24,
+			'des-ede3-cfb1' => 24,
+			'des-ede3-cfb8' => 24,
+			'des-ede3-ecb' => 24,
+			'des-ede3-ofb' => 24,
+			'des3-wrap' => 24,
+			'sm4-cbc' => 16,
+			'sm4-cfb' => 16,
+			'sm4-ctr' => 16,
+			'sm4-ecb' => 16,
+			'sm4-ofb' => 16,
+			default => false,
+		};
+
+		if ($length === false)
+		{
+			trigger_error('openssl_cipher_key_length(): Unknown cipher algorithm', E_USER_WARNING);
+		}
+
+		return $length;
+	}
+	
+endif;

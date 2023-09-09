@@ -65,6 +65,7 @@ test('walkDir', function()
 	sort($files);
 	
 	expect($files)->toMatchArray([
-		'ArraysTest.php', 'FilesTest.php', 'config/a.php', 'config/b.php'
+		'ArraysTest.php', 'FilesTest.php', 'StringsTest.php',
+		'config/a.php', 'config/b.php'
 	]);
 });

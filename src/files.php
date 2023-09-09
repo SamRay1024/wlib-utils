@@ -57,7 +57,7 @@ function createDir(string $sDirName, int $iMode = 0644): bool
 		mkdir($sDirName, $iMode, true);
 
 		if (!is_dir($sDirName))
-			return false;;
+			return false;
 	}
 
 	return true;
