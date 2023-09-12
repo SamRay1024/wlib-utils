@@ -344,7 +344,6 @@ function makePassword(int $iLen): string
  */
 function makePrivateKey(string $sCipher = 'aes-256-ctr'): string
 {
-	$iLen = openssl_cipher_key_length($sCipher);
 	return makePassword(openssl_cipher_key_length($sCipher));
 }
 
