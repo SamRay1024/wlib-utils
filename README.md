@@ -146,3 +146,31 @@ function removeAccents($sString): string;
 ```
 
 _Ces deux fonctions proviennent de la base de code de WordPress !_
+
+#### Chiffrement
+
+```php
+// Générer un mot de passe aléatoire de la longueur donnée
+function makePassword(int $iLen): string
+
+// Générer une clé privée de la longueur attendue par l'algorythme donné
+function makePrivateKey(string $sCipher = 'aes-256-ctr'): string
+
+// Crypter une chaîne
+function encrypt(string $sData, string $sPrivateKey, string $sCipher = 'aes-256-ctr'): string
+
+// Décrypter une chaine
+function decrypt(string $sData, string $sPrivateKey, string $sCipher = 'aes-256-ctr'): string
+```
+
+Exemple :
+
+```php
+$key = makePrivateKey();
+$data = 'Some content to protect';
+
+$enc = encrypt($data, $key);
+
+if (decrypt($enc, $key) == $data)
+	echo 'All is under control !';
+```
