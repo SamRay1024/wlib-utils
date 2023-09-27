@@ -89,6 +89,6 @@ function vd(...$var)
  */
 function vdd(...$var)
 {
-	wd(...$var);
+	vd(...$var);
 	exit();
 }
