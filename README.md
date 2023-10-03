@@ -124,7 +124,7 @@ date_default_timezone_set(config('app.locale.timezone'));
 // Dumper les arguments donnés et continuer l'exécution
 function vd(...$var): void;
 
-// Dumper les arguments donnée et arrêter l'exécution
+// Dumper les arguments donnés et arrêter l'exécution
 function vdd(...$var): void;
 ```
 
