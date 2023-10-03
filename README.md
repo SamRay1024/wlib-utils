@@ -122,10 +122,10 @@ date_default_timezone_set(config('app.locale.timezone'));
 
 ```php
 // Dumper les arguments donnés et continuer l'exécution
-function wd(...$var): void;
+function vd(...$var): void;
 
 // Dumper les arguments donnée et arrêter l'exécution
-function wdd(...$var): void;
+function vdd(...$var): void;
 ```
 
 ### Fichiers
