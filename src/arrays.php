@@ -397,7 +397,7 @@ function config(string $sName = '', mixed $mDefault = null): mixed
 	else
 	{
 		throw new \UnexpectedValueException(
-			'Global `$_CONFIG[\'__includes_paths\']` should be a string'
+			'Global `$_CONFIG[\'__include_paths\']` should be a string'
 			.' or an array or a string.'
 		);
 	}
@@ -434,6 +434,30 @@ function config(string $sName = '', mixed $mDefault = null): mixed
 
 	return access($GLOBALS['_CONFIG'][$sFileName], implode('.', $aNames), $mDefault);
 }
+
+/**
+ * Add include paths for `config()` function.
+ * 
+ * @param string|array $mPath Include path or array of include paths to add.
+ */
+function addConfigIncludePath(string|array $mPath)
+{
+	if (!isset($GLOBALS['_CONFIG']))
+		$GLOBALS['_CONFIG'] = [];
+
+	if (!isset($GLOBALS['_CONFIG']['__include_paths']))
+		$GLOBALS['_CONFIG']['__include_paths'] = [];
+
+	if (is_string($mPath))
+		$mPath = [$mPath];
+
+	foreach ($mPath as $sPath)
+	{
+		if (array_search($sPath, $GLOBALS['_CONFIG']['__include_paths']) === false)
+			$GLOBALS['_CONFIG']['__include_paths'][] = $sPath;
+	}
+}
+
 /**
  * Delete values from an array.
  *
