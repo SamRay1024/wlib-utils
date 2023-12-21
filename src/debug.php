@@ -73,7 +73,7 @@ function vd(...$var)
 
 		$call = debug_backtrace()[0];
 
-		if ($call['function'] == 'wdd')
+		if ($call['function'] == 'vd')
 			$call = debug_backtrace()[1];
 
 		echo '<small style="font-family:monospace;color:#bbb">';
