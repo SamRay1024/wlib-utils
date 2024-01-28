@@ -77,7 +77,9 @@ function vd(...$var)
 			$call = debug_backtrace()[1];
 
 		echo '<small style="font-family:monospace;color:#bbb">';
-		echo "↳ File: {$call['file']} - Line: {$call['line']}</small></div>";
+		echo "↳ File: {$call['file']} - Line: {$call['line']}";
+		echo ' - Time: ' . date('r');
+		echo '</small></div>';
 	}
 }
 
