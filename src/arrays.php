@@ -60,7 +60,21 @@ function isArrayKey(array|ArrayAccess $aArray, int|string $mKey): bool
 		return false;
 	}
 
-	return array_key_exists($mKey, $aArray);
+	if (is_int($mKey))
+		return array_key_exists($mKey, $aArray);
+
+	$aNames = explode('.', $mKey);
+	$aCursor = &$aArray;
+
+	foreach ($aNames as $sKeyName)
+	{
+		if (!array_key_exists($sKeyName, $aCursor))
+			return false;
+
+		$aCursor = &$aCursor[$sKeyName];
+	}
+
+	return true;
 }
 
 /**

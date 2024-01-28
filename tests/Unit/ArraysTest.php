@@ -3,7 +3,10 @@
 $array = [
     'foo' => 'bar',
     'bar' => 'baz',
-    1 => 2
+    1 => 2,
+    'bim' => [
+        'bam' => 'boom'
+    ]
 ];
 
 class Obj implements ArrayAccess
@@ -44,6 +47,7 @@ test('isArrayKey » array', function () use ($array)
     expect(isArrayKey($array, 'bar'))->toBeTrue();
     expect(isArrayKey($array, 'key'))->toBeFalse();
     expect(isArrayKey($array, 1))->toBeTrue();
+    expect(isArrayKey($array, 'bim.bam'))->toBeTrue();
 });
 
 test('isArrayKey » ArrayAccess', function() use ($array)
@@ -79,7 +83,7 @@ test('arrayExtend', function() use ($array)
     $array2 = ['bam' => 'bim', 1 => 4];
     arrayExtend($copy, $array2);
 
-    expect(count($copy))->toBe(4);
+    expect(count($copy))->toBe(5);
     expect($copy['foo'])->toBe('bar');
     expect($copy['bam'])->toBe('bim');
     expect($copy['1'])->toBe(4);
