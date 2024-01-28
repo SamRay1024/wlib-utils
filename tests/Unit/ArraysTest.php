@@ -47,7 +47,10 @@ test('isArrayKey » array', function () use ($array)
     expect(isArrayKey($array, 'bar'))->toBeTrue();
     expect(isArrayKey($array, 'key'))->toBeFalse();
     expect(isArrayKey($array, 1))->toBeTrue();
+    expect(isArrayKey($array, 'bim'))->toBeTrue();
     expect(isArrayKey($array, 'bim.bam'))->toBeTrue();
+    expect(isArrayKey($array, 'bim.boom'))->toBeFalse();
+    expect(isArrayKey($array, 'boom.bim'))->toBeFalse();
 });
 
 test('isArrayKey » ArrayAccess', function() use ($array)
