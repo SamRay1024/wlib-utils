@@ -168,8 +168,11 @@ function arrayExtend(array &$aTarget, array ...$aArrays): void
  * @param mixed $mDefault Default value if `$mName` is a string which doesn't exist in the array.
  * @return mixed|boolean mixed if `$mName` is a `string`, boolean in writing mode.
  */
-function access(array &$aCursor, string|array $mName = '', mixed $mDefault = null): mixed
+function access(&$aCursor, string|array $mName = '', mixed $mDefault = null): mixed
 {
+	if (!is_array($aCursor))
+		return $mDefault;
+
 	if (is_array($mName))
 	{
 		foreach ($mName as $mKey => $mValue)
