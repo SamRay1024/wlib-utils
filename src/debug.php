@@ -42,9 +42,6 @@
  */
 function vd(...$var)
 {
-	if (ob_get_length() !== false)
-		ob_end_clean();
-
 	$vars = func_get_args();
 
 	if (sizeof($vars) <= 0)
@@ -53,7 +50,7 @@ function vd(...$var)
 	$bRenderHtml = PHP_SAPI != 'cli';
 
 	if ($bRenderHtml)
-		echo '<div class="dump" style="margin-bottom:6px">'
+		echo '<div class="dump" style="margin:6px;font-family:monospace;font-size:13px">'
 			.'<pre style="margin:0;padding:6px;background:#efefef;border:1px solid #e0e0e0;color:#333">';
 
 	foreach ($vars as $idx => $var)
@@ -73,12 +70,12 @@ function vd(...$var)
 
 		$call = debug_backtrace()[0];
 
-		if ($call['function'] == 'vd')
+		if ($call['file'] == __FILE__)
 			$call = debug_backtrace()[1];
 
-		echo '<small style="font-family:monospace;color:#bbb">';
-		echo "↳ File: {$call['file']} - Line: {$call['line']}";
-		echo ' - Time: ' . date('r');
+		echo '<small style="color:#069">';
+		echo "↳ <strong>File:</strong> {$call['file']} - <strong>Line:</strong> {$call['line']}";
+		echo ' - <strong>Time:</strong> '. date('r');
 		echo '</small></div>';
 	}
 }
