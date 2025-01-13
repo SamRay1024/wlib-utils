@@ -50,8 +50,19 @@ function vd(...$var)
 	$bRenderHtml = PHP_SAPI != 'cli';
 
 	if ($bRenderHtml)
-		echo '<div class="dump" style="margin:6px;font-family:monospace;font-size:13px">'
-			.'<pre style="margin:0;padding:6px;background:#efefef;border:1px solid #e0e0e0;color:#333">';
+	{
+		$call = debug_backtrace()[0];
+
+		if ($call['file'] == __FILE__)
+			$call = debug_backtrace()[1];
+
+		echo '<div class="dump" style="margin:6px;font-family:monospace;font-size:13px">';
+		echo '<small style="color:#069">';
+		echo "↱ <strong>File:</strong> {$call['file']} - <strong>Line:</strong> {$call['line']}";
+		echo ' - <strong>Time:</strong> '. date('r');
+		echo '</small>';
+		echo '<pre style="margin:0;padding:6px;background:#efefef;border:1px solid #e0e0e0;color:#333">';
+	}
 
 	foreach ($vars as $idx => $var)
 	{
@@ -59,25 +70,13 @@ function vd(...$var)
 			echo '<hr style="height:1px;border:none;color:#efefef;background-color:#e0e0e0;">';
 
 		if (count($vars) > 1)
-			echo '<small style="color:#bbb">arg#'.$idx.' »</small> ';
+			echo '<small style="color:#bbb">arg#'. $idx .' »</small> ';
 
 		var_dump($var);
 	}
 
 	if ($bRenderHtml)
-	{
-		echo '</pre>';
-
-		$call = debug_backtrace()[0];
-
-		if ($call['file'] == __FILE__)
-			$call = debug_backtrace()[1];
-
-		echo '<small style="color:#069">';
-		echo "↳ <strong>File:</strong> {$call['file']} - <strong>Line:</strong> {$call['line']}";
-		echo ' - <strong>Time:</strong> '. date('r');
-		echo '</small></div>';
-	}
+		echo '</pre></div>';
 }
 
 /**
