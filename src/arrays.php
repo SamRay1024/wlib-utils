@@ -551,7 +551,7 @@ function unglobals(string|int $mKey): void
 		else
 		{
 			global $$sVarName;
-			call_user_func_array('unaccess', array_merge(array(&$$sVarName), $aNames));
+			call_user_func_array('unaccess', array(&$$sVarName, implode('.', $aNames)));
 		}
 	}
 }

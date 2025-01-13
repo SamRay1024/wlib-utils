@@ -324,6 +324,11 @@ test('unglobals', function()
 
     expect(array_key_exists('foo', $GLOBALS))->toBeFalse();
     expect($GLOBALS['bar'])->toBeArray()->toHaveCount(0);
+
+    globals(['a.b.c' => 'c', 'a.b.d' => 'd']);
+    unglobals('a.b.c');
+    expect(globals('a.b.c'))->toBeNull();
+    expect(globals('a.b.d'))->toBe('d');
 });
 
 test('unserver', function ()
