@@ -541,3 +541,24 @@ if (!function_exists('openssl_cipher_key_length')) :
 	}
 	
 endif;
+
+/**
+ * Rebuild an URL parsed with PHP native function `parse_url()`.
+ * 
+ * @param array $aParsedUrl Array of URL components.
+ * @return string
+ */
+function rebuildUrl(array $aParsedUrl): string
+{
+	$scheme   = isset($aParsedUrl['scheme'])   ? $aParsedUrl['scheme'] .'://' : '';
+	$host     = isset($aParsedUrl['host'])     ? $aParsedUrl['host'] : '';
+	$port     = isset($aParsedUrl['port'])     ? ':'. $aParsedUrl['port'] : '';
+	$user     = isset($aParsedUrl['user'])     ? $aParsedUrl['user'] : '';
+	$pass     = isset($aParsedUrl['pass'])     ? ':'. $aParsedUrl['pass'] : '';
+	$pass     = ($user || $pass) ? "$pass@" : '';
+	$path     = isset($aParsedUrl['path'])     ? $aParsedUrl['path'] : '';
+	$query    = isset($aParsedUrl['query'])    ? '?'. $aParsedUrl['query'] : '';
+	$fragment = isset($aParsedUrl['fragment']) ? '#'. $aParsedUrl['fragment'] : '';
+
+	return "$scheme$user$pass$host$port$path$query$fragment";
+}
