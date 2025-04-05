@@ -684,3 +684,55 @@ function getUploadedFiles(): array
 
 	return $return;
 }
+
+/**
+ * Load environment variables from the given file.
+ * 
+ * File must respect the format KEY=VALUE per line.
+ * 
+ * Comments are written with first caracter #.
+ * 
+ * @see env() to get values from environment variables.
+ * @param string $sFilePath Env file to load.
+ * @return void
+ */
+function loadDotEnvFile($sFilePath)
+{
+	if (!file_exists($sFilePath))
+	{
+		throw new Exception(
+			'File "'.$sFilePath.'" not found, can\'t load environment variables.'
+		);
+	}
+
+	$aLines = file($sFilePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+	foreach ($aLines as $sLine)
+	{
+		$sLine = trim($sLine);
+
+		if (strpos($sLine, '#') === 0)
+			continue;
+
+		$sLine = preg_replace('/\s*#.*$/', '', $sLine);
+
+		$aPair = explode('=', $sLine, 2);
+
+		if (count($aPair) < 2)
+			continue;
+
+		$sKey = trim($aPair[0]);
+		$sValue = trim($aPair[1]);
+		
+		// Replace 
+		$sValue = preg_replace_callback('`\${(\w+)}`',
+			function ($matches)
+			{
+				return isset($_ENV[$matches[1]]) ? $_ENV[$matches[1]] : '';
+			},
+			$sValue
+		);
+
+		$_ENV[$sKey] = scalar($sValue);
+	}
+}

@@ -562,3 +562,20 @@ function rebuildUrl(array $aParsedUrl): string
 
 	return "$scheme$user$pass$host$port$path$query$fragment";
 }
+
+/**
+ * Convert the given value to its scalar equivalent.
+ *
+ * @param mixed $mValue Value to convert.
+ * @return mixed
+ */
+function scalar($mValue): mixed
+{
+	if (strtolower($mValue) === 'true')		return true;
+	if (strtolower($mValue) === 'false')	return false;
+	if (ctype_digit($mValue))				return (int)$mValue;
+	if (is_numeric($mValue))				return (float)$mValue;
+	if (strtolower($mValue) === 'null')		return null;
+
+	return $mValue;
+}
