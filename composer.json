@@ -21,6 +21,7 @@
             "src/arrays.php",
             "src/debug.php",
             "src/files.php",
+            "src/forms.php",
             "src/strings.php"
         ]
     },

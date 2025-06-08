@@ -645,47 +645,6 @@ function unenv(string|int $mKey): void
 }
 
 /**
- * Get normalized array of uploaded file(s) instead of $_FILES crappy default structure.
- * 
- * Thanks to Mrten for this usefull function !
- * 
- * @see https://gist.github.com/Mrten
- * @see https://gist.github.com/umidjons/9893735?permalink_comment_id=3495051#gistcomment-3495051
- * @return array
- */
-function getUploadedFiles(): array
-{
-	$return = [];
-
-	foreach ($_FILES as $key => $aFile)
-	{
-		if (isset($aFile['name']) && is_array($aFile['name']))
-		{
-			$aNormalized = [];
-
-			foreach (['name', 'type', 'tmp_name', 'error', 'size'] as $k)
-			{
-				array_walk_recursive(
-					$aFile[$k],
-					function (&$data, $key, $k)
-					{
-						$data = [$k => $data];
-					},
-					$k
-				);
-
-				$aNormalized = array_replace_recursive($aNormalized, $aFile[$k]);
-			}
-
-			$return[$key] = $aNormalized;
-		}
-		else $return[$key] = $aFile;
-	}
-
-	return $return;
-}
-
-/**
  * Load environment variables from the given file.
  * 
  * File must respect the format KEY=VALUE per line.
