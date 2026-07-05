@@ -2,6 +2,8 @@
 
 Fonctions PHP utilitaires.
 
+> 🚀 **Découvrez aussi [wlib/skeleton](https://github.com/SamRay1024/wlib-skeleton)** qui vous propose une structure de départ clé en main pour démarrer votre prochain projet.
+
 ## Installation
 
 ```shell
