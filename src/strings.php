@@ -416,11 +416,13 @@ if (!function_exists('openssl_cipher_key_length')) :
 	 * Polyfill to openssl_cipher_key_length() function for PHP < 8.2.0.
 	 * 
 	 * @see PHP documentation.
+	 * @return int|false
 	 */
-	function openssl_cipher_key_length(string $cipher_algo): int|false
+	function openssl_cipher_key_length(string $cipher_algo)
 	{
-		$length = match (strtolower($cipher_algo))
-		{
+		$cipher_algo = strtolower($cipher_algo);
+
+		$aKeyLengths = [
 			'aes-128-cbc' => 16,
 			'aes-128-cbc-hmac-sha1' => 16,
 			'aes-128-cbc-hmac-sha256' => 16,
@@ -529,15 +531,15 @@ if (!function_exists('openssl_cipher_key_length')) :
 			'sm4-ctr' => 16,
 			'sm4-ecb' => 16,
 			'sm4-ofb' => 16,
-			default => false,
-		};
+		];
 
-		if ($length === false)
+		if (!isset($aKeyLengths[$cipher_algo]))
 		{
 			trigger_error('openssl_cipher_key_length(): Unknown cipher algorithm', E_USER_WARNING);
+			return false;
 		}
 
-		return $length;
+		return $aKeyLengths[$cipher_algo];
 	}
 	
 endif;
