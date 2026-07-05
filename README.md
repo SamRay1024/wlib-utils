@@ -8,6 +8,8 @@ Fonctions PHP utilitaires.
 composer require wlib/utils
 ```
 
+**Prérequis** : PHP 7.1
+
 ## Sucreries disponibles
 
 ### Tableaux
