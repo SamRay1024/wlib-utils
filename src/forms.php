@@ -50,7 +50,7 @@
  */
 function checked(mixed $mValue, mixed $mCompare = true)
 {
-	return __csdred($mValue, $mCompare, 'checked');
+	return _csdred($mValue, $mCompare, 'checked');
 }
 
 /**
@@ -62,7 +62,7 @@ function checked(mixed $mValue, mixed $mCompare = true)
  */
 function selected(mixed $mValue, mixed $mCompare = true)
 {
-	return __csdred($mValue, $mCompare, 'selected');
+	return _csdred($mValue, $mCompare, 'selected');
 }
 
 /**
@@ -74,7 +74,7 @@ function selected(mixed $mValue, mixed $mCompare = true)
  */
 function disabled(mixed $mValue, mixed $mCompare = true)
 {
-	return __csdred($mValue, $mCompare, 'disabled');
+	return _csdred($mValue, $mCompare, 'disabled');
 }
 
 /**
@@ -86,7 +86,7 @@ function disabled(mixed $mValue, mixed $mCompare = true)
  */
 function readonly(mixed $mValue, mixed $mCompare = true)
 {
-	return __csdred($mValue, $mCompare, 'readonly');
+	return _csdred($mValue, $mCompare, 'readonly');
 }
 
 /**
@@ -97,7 +97,7 @@ function readonly(mixed $mValue, mixed $mCompare = true)
  * @param string $sAttr Attribute to generate.
  * @return string HTML attribute or empty string.
  */
-function __csdred(mixed $mValue, mixed $mCompare, string $sAttr)
+function _csdred(mixed $mValue, mixed $mCompare, string $sAttr)
 {
 	return ((string) $mValue === (string) $mCompare ? "$sAttr=\"$sAttr\"" : '');
 }
