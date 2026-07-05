@@ -415,7 +415,6 @@ if (!function_exists('openssl_cipher_key_length')) :
 	/**
 	 * Polyfill to openssl_cipher_key_length() function for PHP < 8.2.0.
 	 * 
-	 * @see PHP documentation.
 	 * @return int|false
 	 */
 	function openssl_cipher_key_length(string $cipher_algo)
