@@ -71,8 +71,14 @@ function vd(...$var)
 
 		if (count($vars) > 1)
 			echo '<small style="color:#bbb">arg#'. $idx .' »</small> ';
-
-		var_dump($var);
+	
+		if (ini_get('xdebug.mode'))
+		{
+			ob_start();
+			var_dump($var);
+			echo preg_replace('`^.*:\d+:\n`', '', ob_get_clean());
+		}
+		else var_dump($var);
 	}
 
 	if ($bRenderHtml)
